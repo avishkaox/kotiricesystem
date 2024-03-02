@@ -67,7 +67,7 @@ const Dashboard = () => {
         <Box p={2}>
             <Box display="flex" justifyContent="space-between" p={2}>
                 <Box display="flex" justifyContent="space-between" alignItems="center"  >
-                    <Header title="DASHBOARD" subtitle={"Welcome " + user.name + " to Your Dashboard"} />
+                    <Header title="DASHBOARD" subtitle={"Welcome " + user.name + " to Your Dashboard on Kotrice"} />
                 </Box>
                 <Box>
                 </Box>
