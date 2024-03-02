@@ -121,7 +121,7 @@ const updateItem = asyncHandler(async (req, res) => {
     res.status(200).json(updatedItem);
 });
 
-// get list of items queries
+// get list of items queriesshs
 const listItem = asyncHandler(async (req, res, next) => {
     // search for item by keyword
     let searchKeyword = req.query.keyword
