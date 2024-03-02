@@ -1,0 +1,265 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+html,
+body,
+#root,
+.app,
+.content {
+  height: 100%;
+  width: 100%;
+}
+
+.content {
+  overflow: auto;
+}
+
+.app {
+  display: flex;
+  position: relative;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track  */
+
+::-webkit-scrollbar-track {
+  background: #e0e0e0;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover  */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.fullview {
+  display: contents;
+}
+
+.login-view {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.sideview {
+  width: 70%;
+  background: url('../public/assets/login-bg-image.png');
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.formview {
+  width: 30%;
+  background: white;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  padding: 5%;
+  font-family: 'Source Sans 3', sans-serif;
+  gap: 40px;
+}
+
+.formview label {
+  color: #555 !important;
+}
+
+.formview label input {
+  color: #555 !important;
+}
+
+.login-link {
+  color: aquamarine;
+}
+
+.access-cell {
+  justify-content: center !important;
+}
+
+.pro-sidebar.collapsed {
+  width: 92px !important;
+}
+
+.Header {
+  padding-bottom: 21px !important;
+}
+
+.itembox {
+  padding: 15px;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  margin-right: 10px;
+  box-shadow: 0 0 20px -7px black;
+}
+
+.itembox button:hover {
+  background-color: rgb(244 67 54 / 67%) !important;
+}
+
+.productcard {
+  background-color: #5d6966 !important;
+}
+
+.cardgrid {
+  margin-top: 30px;
+}
+
+.dialog-box-buttons button:nth-child(1),
+.dialog-box-delete button:nth-child(1) {
+  background: #c4ffcc;
+  font-size: 14px;
+  color: #333;
+  font-weight: 600;
+}
+
+.dialog-box-buttons button:nth-child(3) {
+  background: #4cff4c;
+  font-size: 14px;
+  color: #333;
+  font-weight: 600;
+}
+
+.dialog-box-buttons button:nth-child(2),
+.dialog-box-delete button:nth-child(2) {
+  background: #ff9999;
+  font-size: 14px;
+  color: #333;
+  font-weight: 600;
+}
+
+.dialog-box-delete button:nth-child(2) {
+  margin-left: 15px;
+}
+
+.dialog-heading {
+  background: #b668ff !important;
+  color: white !important;
+  font-size: 21px !important;
+  padding: 9px 24px !important;
+}
+
+.collectlocation {
+  display: inline-flex;
+  padding: 4px 15px;
+  background: #265d4f;
+  border-radius: 5px;
+  box-shadow: 0 0 22px -8px black;
+  color: white;
+  font-size: 16px;
+}
+
+.categories button {
+  background: #006148;
+  color: white;
+  font-size: 16px;
+}
+
+.categories button:focus,
+.categories button:hover {
+  background-color: #8b9391;
+}
+
+.topbar-icons {
+  padding-bottom: 0px;
+  position: absolute;
+  left: 93%;
+  z-index: 10000;
+}
+
+.foodsearch {
+  margin-top: 17px;
+  background: #07513e;
+  width: 365px;
+  color: white;
+  margin-top: 17px !important;
+}
+
+.foodsearch label {
+  color: white;
+}
+
+.nivo-axis.nivo-axisLeft text {
+  fill: red !important;
+  /* Change the fill color to your desired color */
+}
+
+.orderbox {
+  position: absolute;
+  top: 19%;
+  right: 11px;
+}
+
+.orderboxtoggle button {
+  background: #777777;
+  color: white;
+  font-size: 15px;
+  z-index: 1000;
+}
+
+.order {
+  position: relative;
+  background: white;
+  width: 600px;
+  height: auto;
+  color: black;
+  padding-bottom: 18px;
+  border-radius: 13px;
+  box-shadow: 0 0 27px -4px black;
+}
+
+.order h5 {
+  font-size: 39px;
+  font-weight: 500;
+  text-align: center;
+  padding-top: 13px;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+.order h6 {
+  text-align: end;
+  padding: 16px;
+  padding-right: 28px;
+  background: #f4fff7;
+  font-size: 19px;
+  font-family: 'Poppins', sans-serif !important;
+  margin-top: 23px;
+  box-shadow: 0 0 29px -16px black;
+}
+
+.order button {
+  display: block;
+  margin-left: auto;
+  background: #91ffa5;
+  color: black;
+  font-family: 'Poppins', sans-serif !important;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 10px 16px;
+  /* margin-top: 17px; */
+  box-shadow: 0 0 29px -13px black;
+  border-radius: 11px;
+  margin-right: 21px;
+  transition: 500ms;
+}
+
+.order button:hover {
+  box-shadow: none;
+  transition: 500ms;
+}
+.quantity-inputfield input{
+  color: black;
+}
