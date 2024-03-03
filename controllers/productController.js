@@ -7,7 +7,9 @@ const PurchasedProduct = require("../models/purchasedProductModel");
 
 // Create Product
 const createProduct = asyncHandler(async (req, res) => {
-    const { name, category, price, collectlocation, waitingtime, items, user } = req.body;
+    const { name, category, price, collectlocation, waitingtime, smallportionprice 
+        , mediumportionprice , largeportionprice , smallportionservesupto , mediumportionservesupto ,  largeportionservesupto, 
+         items, user } = req.body;
 
     // Validation
     if (!name || !category || !price || !collectlocation || !waitingtime || !items) {
@@ -64,6 +66,12 @@ const createProduct = asyncHandler(async (req, res) => {
         price,
         waitingtime,
         collectlocation,
+        smallportionprice,
+        mediumportionprice,
+        largeportionprice,
+        smallportionservesupto,
+        mediumportionservesupto,
+        largeportionservesupto,
         items: JSON.parse(items),
         image: fileData,
     });

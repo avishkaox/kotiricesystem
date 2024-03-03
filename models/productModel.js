@@ -51,6 +51,30 @@ const productSchema = mongoose.Schema(
             required: [true, "Please add a Waiting Time"],
             trim: true,
         },
+        smallportionprice: {
+            type: Number,
+            trim: true,
+        },
+        mediumportionprice: {
+            type: Number,
+            trim: true,
+        },
+        largeportionprice: {
+            type: Number,
+            trim: true,
+        },
+        smallportionservesupto:{
+            type : Number,
+            trim: true,
+        },
+        mediumportionservesupto:{
+            type : Number,
+            trim: true,
+        },
+        largeportionservesupto:{
+            type : Number,
+            trim: true,
+        }
     },
     {
         timestamps: true,
