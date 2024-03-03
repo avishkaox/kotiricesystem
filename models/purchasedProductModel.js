@@ -11,6 +11,11 @@ const purchasedProductSchema = mongoose.Schema(
             type: Date,
             default: Date.now,
         },
+        productStatus: {
+            type: String,
+            enum: ["Preparing", "Out for Delivery" , "Delivered", "Ready for Takeaway"],
+            default: "Preparing",
+        },
         quantity: {
             type: Number,
             default: 1,

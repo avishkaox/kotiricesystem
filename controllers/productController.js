@@ -298,6 +298,56 @@ const getAllPurchasedProducts = asyncHandler(async (req, res) => {
     res.status(200).json(purchasedProducts);
 });
 
+
+// update a purchase product status 
+
+const updatePurchaceProductStatus = asyncHandler(async (req, res) => {
+    const { productStatus } = req.body;
+    const { id } = req.params;
+
+    // Validate product status
+    if (!Object.values(PurchasedProduct.schema.paths.productStatus.enumValues).includes(productStatus)) {
+        res.status(400);
+        throw new Error("Invalid product status");
+    }
+
+    try {
+        // Find the purchased product by id
+        const purchasedProduct = await PurchasedProduct.findById(id);
+
+        // If the purchased product doesn't exist, respond with an error
+        if (!purchasedProduct) {
+            res.status(404).json({ message: "This food item hasn't been purchased yet. Please try again." });
+            return;
+        }
+
+        console.log('Found purchased product:', purchasedProduct);
+
+        // Update the purchase product status
+        const updatedPurchasedProduct = await PurchasedProduct.findByIdAndUpdate(
+            id,
+            { productStatus },
+            { 
+                new: true, 
+                runValidators: true 
+            }
+        );
+
+        console.log('Updated purchased product:', updatedPurchasedProduct);
+
+        res.status(200).json(updatedPurchasedProduct);
+    } catch (error) {
+        // Handle any other errors
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+module.exports = updatePurchaceProductStatus;
+
+
+
+
 module.exports = {
     createProduct,
     getProducts,
@@ -307,5 +357,6 @@ module.exports = {
     purchaseProduct,
     list,
     getProductsForPieChart,
-    getAllPurchasedProducts
+    getAllPurchasedProducts,
+    updatePurchaceProductStatus
 };

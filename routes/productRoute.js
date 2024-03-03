@@ -10,7 +10,8 @@ const {
   list,
   purchaseProduct,
   getProductsForPieChart,
-  getAllPurchasedProducts
+  getAllPurchasedProducts,
+  updatePurchaceProductStatus
 } = require("../controllers/productController");
 const { upload } = require("../utils/fileUpload");
 
@@ -21,7 +22,7 @@ router.get("/allpurchasedproducts", getAllPurchasedProducts);
 router.get("/productsforpiechart", getProductsForPieChart);
 router.get("/list",  list);
 router.get("/:id",  getProduct);
-router.delete("/:id",  deleteProduct);
+router.patch("/:id/updatestatus",  updatePurchaceProductStatus);
 router.post("/:id/purchase", purchaseProduct);
 
 module.exports = router;
