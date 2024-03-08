@@ -23,8 +23,6 @@ const registerUser = asyncHandler(
     async (req, res) => {
         const { name, email, password, registerid, phone, role, image } = req.body;
 
-
-
         // Handle Image upload
         let fileData = {};
         if (req.file) {
