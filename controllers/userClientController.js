@@ -349,36 +349,34 @@ const forgotclientPassword = asyncHandler(async (req, res) => {
 // Reset password
 
 const resetPassword = asyncHandler(async (req, res) => {
-  const { password } = req.body;
-  const { resetToken } = req.params;
-
-  // Hash token then compare against token in db
-
-  const hashedToken = crypto
-    .createHash("sha256")
-    .update(resetToken)
-    .digest("hex");
-
-  // Find token in database
-  const clientuserToken = await Token.findOne({
-    token: hashedToken,
-    expiresAt: { $gt: Date.now() },
+    const { password } = req.body;
+    const { resetToken } = req.params;
+  
+    // Hash token then compare against token in db
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+  
+    // Find token in database
+    const clientTokenEntry = await clientToken.findOne({
+      clienttoken: hashedToken,
+      expiresAt: { $gt: Date.now() },
+    });
+  
+    if (!clientTokenEntry) {
+      res.status(404);
+      throw new Error("Token not found");
+    }
+  
+    // find the user
+    const clientuser = await clientUser.findOne({
+      _id: clientTokenEntry.clientuserId,
+    });
+    clientuser.password = password;
+    await clientuser.save();
+    res.status(200).json({ message: "Password updated successfully" });
   });
-
-  if (!clientuserToken) {
-    res.status(404);
-    throw new Error("Token not found");
-  }
-
-  // find the user
-
-  const clientuser = await clientUser.findOne({
-    _id: clientuserToken.clientuserId,
-  });
-  clientuser.password = password;
-  await clientuser.save();
-  res.status(200).json({ message: "Password updated successfully" });
-});
 
 // Update user details by ID
 const updateclientUserById = asyncHandler(async (req, res) => {
