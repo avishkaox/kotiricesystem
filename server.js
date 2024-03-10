@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const errorHandler = require("./middleWare/errorMiddleware")
 const userRoute = require("./routes/userRoute");
+const clientuserRoute = require("./routes/clientUserRoute");
 const productRoute = require("./routes/productRoute");
 const cartRoute = require("./routes/cartRoute");
 const categoryRoute = require("./routes/categoryRoute")
@@ -29,6 +30,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 //Routes Middelware
 
 app.use("/api/users", userRoute);
+app.use("/api/clientusers", clientuserRoute);
 app.use("/api/products", productRoute);
 app.use("/api/items", itemRoute);
 app.use("/api/cart", cartRoute);

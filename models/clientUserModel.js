@@ -1,11 +1,15 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-const userSchema = mongoose.Schema({
+const clientuserSchema = mongoose.Schema({
 
-    name: {
+    firstname: {
         type: String,
-        required: [true, "Please enter a name"]
+        required: [true, "Please enter your First Name"]
+    },
+    lastname: {
+        type: String,
+        required: [true, "Please enter your last Name"]
     },
     email: {
         type: String,
@@ -31,21 +35,11 @@ const userSchema = mongoose.Schema({
     phone: {
         type: String,
         trim: true,
-        default: '+1979999966666'
     },
-    role: {
-        type: String,
-        enum: ['employee', 'manager', 'cashier', 'chef'],
-        default: 'employee'
+    cart: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Cart",
     },
-    registerid: {
-        type: Number,
-        required: [true, "Please add a Register ID"],
-    },
-    // cart: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "Cart",
-    // },
 
 }, {
 
@@ -56,7 +50,7 @@ const userSchema = mongoose.Schema({
 
 //encrypted password
 
-userSchema.pre('save', async function (next) {
+clientuserSchema.pre('save', async function (next) {
     if (!this.isModified('password')) {
         next();
     }
@@ -66,5 +60,5 @@ userSchema.pre('save', async function (next) {
 });
 
 
-const User = mongoose.model('User', userSchema)
-module.exports = User
+const clientUser = mongoose.model('clientUser', clientuserSchema)
+module.exports = clientUser

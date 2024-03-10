@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Product = require("../models/productModel");
 const { fileSizeFormatter } = require("../utils/fileUpload");
 const cloudinary = require('../utils/cloudinary');
+// const clientuser = require("../models/clientUserModel");
 const Item = require("../models/itemModel");
 const PurchasedProduct = require("../models/purchasedProductModel");
 
@@ -269,7 +270,7 @@ const purchaseProduct = async (req, res) => {
             productId: product._id,
             purchasedDate: new Date(),
             quantity: purchasedQuantity,
-            // You can add other relevant fields here if needed
+            // clientuser: req.clientuser._id,
         });
 
         await purchasedProduct.save();

@@ -20,6 +20,11 @@ const purchasedProductSchema = mongoose.Schema(
             type: Number,
             default: 1,
         },
+        clientuser: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: "clientUser",
+        },
     },
     {
         timestamps: true,
