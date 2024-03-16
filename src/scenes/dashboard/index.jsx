@@ -32,7 +32,7 @@ const Dashboard = () => {
                 setAllItem(items);
             })
             .catch((error) => {
-                // Handle the error
+                // Handle the errors
             })
     }, []);
 
