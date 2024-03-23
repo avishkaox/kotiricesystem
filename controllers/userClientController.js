@@ -230,7 +230,7 @@ const updateclientUser = asyncHandler(async (req, res) => {
 
   if (clientuser) {
     const { firstname, lastname, email, phone, image } = clientuser;
-    clientuser.email = email;
+    clientuser.email = req.body.email || email;
     clientuser.firstname = req.body.firstname || firstname;
     clientuser.lastname = req.body.lastname || lastname;
     clientuser.phone = req.body.phone || phone;
@@ -330,7 +330,7 @@ const forgotclientPassword = asyncHandler(async (req, res) => {
   const message = `<h2> Hello ${clientuser.firstname} </h2>
         
         <p> Please click on the following link to reset your password:</p>
-        <a title="Click to visit" href="${resetUrl}" clicktravking = "off" >${resetUrl}</a>
+        <a title="Click to visit" href="${resetUrl}" clicktracking = "off" >${resetUrl}</a>
         `;
 
   const subject = "Your password reset request";
