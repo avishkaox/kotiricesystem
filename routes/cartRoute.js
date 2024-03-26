@@ -9,7 +9,7 @@ const {
     removeCartItem,
 } = require("../controllers/cartController");
 
-const protect = require("../middleWare/authMiddleware");
+const protect = require("../middleWare/authclientMiddleware");
 
 router.route("/add").post(protect, addToCart);
 router.route("/").get(getCartItems);

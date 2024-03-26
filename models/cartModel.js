@@ -14,7 +14,7 @@ const cartItemSchema = mongoose.Schema({
 
 const CartSchema = mongoose.Schema(
     {
-        user: {
+      clientuser: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "clientUser",
             required: true,

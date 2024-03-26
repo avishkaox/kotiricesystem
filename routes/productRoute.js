@@ -27,4 +27,3 @@ router.patch("/:id/updatestatus", protect,  updatePurchaceProductStatus);
 router.post("/:id/purchase", protectclient, purchaseProduct);
 
 module.exports = router;
-
