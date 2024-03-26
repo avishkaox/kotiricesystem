@@ -12,7 +12,7 @@ const {
 const protect = require("../middleWare/authclientMiddleware");
 
 router.route("/add").post(protect, addToCart);
-router.route("/").get(getCartItems);
+router.route("/").get( protect,  getCartItems);
 router.route("/:itemId").put( updateCartItemQuantity).delete(protect, removeCartItem);
 
 

@@ -34,7 +34,7 @@ const addToCart = asyncHandler(async (req, res) => {
 // Get cart items
 const getCartItems = asyncHandler(async (req, res) => {
     // Fetch cart for the current user
-    const cart = await Cart.findOne({ clientUser: req.clientUser.id }).populate({
+    const cart = await Cart.findOne({ clientuser: req.clientuser.id }).populate({
         path: "items.productid",
         model: Product,
     });
@@ -46,7 +46,7 @@ const getCartItems = asyncHandler(async (req, res) => {
 const updateCartItemQuantity = asyncHandler(async (req, res) => {
     const { itemId, quantity } = req.body;
 
-    const cart = await Cart.findOne({ clientUser: req.clientUser.id });
+    const cart = await Cart.findOne({ clientuser: req.clientuser.id });
     if (!cart) {
         res.status(404);
         throw new Error("Cart not found");
@@ -69,7 +69,7 @@ const updateCartItemQuantity = asyncHandler(async (req, res) => {
 const removeCartItem = asyncHandler(async (req, res) => {
     const { itemId } = req.params;
 
-    const cart = await Cart.findOne({ clientUser: req.clientUser.id });
+    const cart = await Cart.findOne({ clientuser: req.clientuser.id });
     if (!cart) {
         res.status(404);
         throw new Error("Cart not found");
