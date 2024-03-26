@@ -6,7 +6,7 @@ const path = require("path");
 // Add item to cart
 const addToCart = asyncHandler(async (req, res) => {
     const { productid, quantity } = req.body;
-    console.log(quantity)
+    // console.log(quantity)
     const product = await Product.findById(productid);
     if (!product) {
         res.status(404);

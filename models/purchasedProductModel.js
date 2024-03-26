@@ -1,35 +1,54 @@
 const mongoose = require("mongoose");
 
 const purchasedProductSchema = mongoose.Schema(
-    {
+  {
+    products: [
+      {
         productId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Product",
-            required: true,
-        },
-        purchasedDate: {
-            type: Date,
-            default: Date.now,
-        },
-        productStatus: {
-            type: String,
-            enum: ["Preparing", "Out for Delivery" , "Delivered", "Ready for Takeaway"],
-            default: "Preparing",
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
         },
         quantity: {
-            type: Number,
-            default: 1,
+          type: Number,
+          required: true,
         },
-        clientuser: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true,
-            ref: "clientUser",
-        },
+      },
+    ],
+    cart: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Cart",
+      required: true,
     },
-    {
-        timestamps: true,
+    purchasedDate: {
+      type: Date,
+      default: Date.now,
+    },
+    productStatus: {
+      type: String,
+      enum: [
+        "Preparing",
+        "Out for Delivery",
+        "Delivered",
+        "Ready for Takeaway",
+      ],
+      default: "Preparing",
+    },
+    subtotal: {
+      type: Number,
+      required: true,
+    },
+    discount:{
+        type: Number,
     }
+  },
+  {
+    timestamps: true,
+  }
 );
 
-const PurchasedProduct = mongoose.model("PurchasedProduct", purchasedProductSchema);
+const PurchasedProduct = mongoose.model(
+  "PurchasedProduct",
+  purchasedProductSchema
+);
 module.exports = PurchasedProduct;

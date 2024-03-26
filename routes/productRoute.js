@@ -24,6 +24,6 @@ router.get("/productsforpiechart", getProductsForPieChart);
 router.get("/list",  list);
 router.get("/:id",  getProduct);
 router.patch("/:id/updatestatus", protect,  updatePurchaceProductStatus);
-router.post("/:id/purchase", protectclient, purchaseProduct);
+router.post("/purchase", protectclient, purchaseProduct);
 
 module.exports = router;

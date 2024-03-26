@@ -4,6 +4,7 @@ const { fileSizeFormatter } = require("../utils/fileUpload");
 const sendEmail = require("../utils/sendEmail");
 const cloudinary = require("../utils/cloudinary");
 const clientuser = require("../models/clientUserModel");
+const Cart = require("../models/cartModel");
 const Item = require("../models/itemModel");
 const PurchasedProduct = require("../models/purchasedProductModel");
 
@@ -246,87 +247,148 @@ const getProductsForPieChart = asyncHandler(async (req, res) => {
   res.status(200).json(dataForPieChart);
 });
 
-const purchaseProduct = async (req, res) => {
-  const { id } = req.params;
-  const { quantity } = req.body;
-  // Check if the user is authenticated
-  if (!req.clientuser || !req.clientuser._id) {
-    return res
-      .status(401)
-      .json({ message: "Unauthorized: User not authenticated" });
+// const purchaseProduct = async (req, res) => {
+//   const { id } = req.params;
+//   const { quantity } = req.body;
+//   // Check if the user is authenticated
+//   if (!req.clientuser || !req.clientuser._id) {
+//     return res
+//       .status(401)
+//       .json({ message: "Unauthorized: User not authenticated" });
+//   }
+
+//   const userId = req.clientuser._id; // Extract user ID from authenticated user
+
+//   // Validate the quantity
+//   if (typeof quantity !== "number" || quantity <= 0) {
+//     return res.status(400).json({ message: "Invalid quantity" });
+//   }
+
+//   try {
+//     // Find the product by ID
+//     const product = await Product.findById(id).populate("items.itemId");
+
+//     // Check if the product exists
+//     if (!product) {
+//       return res.status(404).json({ message: "Product not found" });
+//     }
+
+//     // Reduce the quantity of each associated item
+//     for (const item of product.items) {
+//       const { itemId } = item;
+//       const itemToUpdate = await Item.findById(itemId);
+
+//       // Check if the item exists
+//       if (!itemToUpdate) {
+//         return res.status(404).json({ message: `Item not found: ${itemId}` });
+//       }
+
+//       // Check if the item has enough quantity to purchase
+//       if (itemToUpdate.quantity < item.quantity * quantity) {
+//         return res.status(400).json({
+//           message: `Insufficient quantity for item: ${itemToUpdate.name}`,
+//         });
+//       }
+
+//       // Update the item quantity
+//       itemToUpdate.quantity -= item.quantity * quantity;
+//       await itemToUpdate.save();
+//     }
+
+//     // Use the default value (1) for quantity if it's not provided in the request body
+//     const purchasedQuantity = quantity ? parseInt(quantity) : 1;
+
+//     // Save the details of the purchased product in the PurchasedProduct collection
+//     const purchasedProduct = new PurchasedProduct({
+//       productId: product._id,
+//       purchasedDate: new Date(),
+//       quantity: purchasedQuantity,
+//       clientuser: userId,
+//     });
+
+//     await purchasedProduct.save();
+
+//     // If everything is successful, you can send a success message or other response
+//     res.status(200).json({ message: "Product purchased successfully" });
+//   } catch (error) {
+//     // Handle any errors that may occur during the purchase process
+//     console.error("Error purchasing product:", error);
+//     res
+//       .status(500)
+//       .json({ message: "An error occurred during the purchase process" });
+//   }
+// };
+
+const purchaseProduct = asyncHandler(async (req, res) => {
+  const { discount } = req.body;
+
+  // Fetch cart for the current user
+  const cart = await Cart.findOne({ clientuser: req.clientuser.id }).populate({
+    path: "items.productid",
+    model: Product,
+  });
+
+  if (!cart) {
+    res.status(404);
+    throw new Error("Cart not found");
   }
 
-  const userId = req.clientuser._id; // Extract user ID from authenticated user
+  // Initialize an array to store purchased products
+  const purchasedProducts = [];
+  const totalPriceforEachProduct = [];
 
-  // Validate the quantity
-  if (typeof quantity !== "number" || quantity <= 0) {
-    return res.status(400).json({ message: "Invalid quantity" });
-  }
+  // Iterate through cart items and create purchased products
+  for (const item of cart.items) {
+    // Create purchased product object with the quantity from the cart
+    const purchasedProductObj = {
+      productId: item.productid._id,
+      quantity: item.quantity,
+      totalpriceforone: item.productid.price * item.quantity,
+    };
 
-  try {
-    // Find the product by ID
-    const product = await Product.findById(id).populate("items.itemId");
+    purchasedProducts.push(purchasedProductObj);
 
-    // Check if the product exists
-    if (!product) {
-      return res.status(404).json({ message: "Product not found" });
-    }
-
-    // Reduce the quantity of each associated item
-    for (const item of product.items) {
-      const { itemId } = item;
-      const itemToUpdate = await Item.findById(itemId);
-
-      // Check if the item exists
-      if (!itemToUpdate) {
-        return res.status(404).json({ message: `Item not found: ${itemId}` });
-      }
-
-      // Check if the item has enough quantity to purchase
-      if (itemToUpdate.quantity < item.quantity * quantity) {
-        return res.status(400).json({
-          message: `Insufficient quantity for item: ${itemToUpdate.name}`,
-        });
-      }
-
-      // Update the item quantity
-      itemToUpdate.quantity -= item.quantity * quantity;
-      await itemToUpdate.save();
-    }
-
-    // Use the default value (1) for quantity if it's not provided in the request body
-    const purchasedQuantity = quantity ? parseInt(quantity) : 1;
-
-    // Save the details of the purchased product in the PurchasedProduct collection
-    const purchasedProduct = new PurchasedProduct({
-      productId: product._id,
-      purchasedDate: new Date(),
-      quantity: purchasedQuantity,
-      clientuser: userId,
+    // Update inventory by reducing the quantity of the product
+    await Product.findByIdAndUpdate(item.productid._id, {
+      $inc: { inventory: -item.quantity },
     });
-
-    await purchasedProduct.save();
-
-    // If everything is successful, you can send a success message or other response
-    res.status(200).json({ message: "Product purchased successfully" });
-  } catch (error) {
-    // Handle any errors that may occur during the purchase process
-    console.error("Error purchasing product:", error);
-    res
-      .status(500)
-      .json({ message: "An error occurred during the purchase process" });
   }
-};
+
+  for (const totalprice of purchasedProducts) {
+    totalPriceforEachProduct.push(totalprice.totalpriceforone);
+  }
+
+  let subtotal;
+
+  if (discount) {
+    subtotal = totalPriceforEachProduct.reduce((acc, curr) => acc + curr, 0);
+    subtotal = (subtotal * (100 - discount)) / 100;
+  } else {
+    subtotal = totalPriceforEachProduct.reduce((acc, curr) => acc + curr, 0);
+  }
+
+  // Create purchased product record with the array of products
+  const purchasedProduct = await PurchasedProduct.create({
+    products: purchasedProducts,
+    cart: cart._id,
+    purchasedDate: new Date(),
+    productStatus: "Preparing",
+    subtotal: subtotal,
+    discount:discount
+  });
+
+  // Clear items in the cart after successful purchase
+  cart.items = [];
+  await cart.save();
+
+  res.status(200).json({ message: "Products purchased successfully" });
+});
+
+// get all the purchused products
 
 const getAllPurchasedProducts = asyncHandler(async (req, res) => {
   const purchasedProducts = await PurchasedProduct.find({})
-    .populate({
-      path: "productId",
-      populate: {
-        path: "items.itemId", // Assuming you have an "itemId" field in the items array
-        model: "Item",
-      },
-    })
+
     .exec();
 
   res.status(200).json(purchasedProducts);
@@ -350,7 +412,9 @@ const updatePurchaceProductStatus = asyncHandler(async (req, res) => {
 
   try {
     // Find the purchased product by id
-    const purchasedProduct = await PurchasedProduct.findById(id).populate({ path: 'productId', select: 'name'}).populate('clientuser');
+    const purchasedProduct = await PurchasedProduct.findById(id)
+      .populate({ path: "productId", select: "name" })
+      .populate("clientuser");
 
     // If the purchased product doesn't exist, respond with an error
     if (!purchasedProduct) {
@@ -374,13 +438,15 @@ const updatePurchaceProductStatus = asyncHandler(async (req, res) => {
 
     console.log("Updated purchased product:", updatedPurchasedProduct);
 
-    const userEmail = purchasedProduct.clientuser ? purchasedProduct.clientuser.email : 'User email didnt found';
+    const userEmail = purchasedProduct.clientuser
+      ? purchasedProduct.clientuser.email
+      : "User email didnt found";
     const newStatus = updatedPurchasedProduct.productStatus;
     const productasd = purchasedProduct.productId.name;
     const orderID = purchasedProduct._id;
-    console.log(newStatus , "----this is the new status of the product");
-    console.log(productasd , "---this is the food you order");
-    console.log( orderID , "---this is ther order id" );
+    console.log(newStatus, "----this is the new status of the product");
+    console.log(productasd, "---this is the food you order");
+    console.log(orderID, "---this is ther order id");
     // Status update
 
     const message = `
@@ -394,10 +460,10 @@ const updatePurchaceProductStatus = asyncHandler(async (req, res) => {
     const subject = "Your Order Status changed";
     const send_to = userEmail;
     const sent_from = process.env.EMAIL_USER;
-    const reply_to  = process.env.EMAIL_USER;
+    const reply_to = process.env.EMAIL_USER;
 
     try {
-      await sendEmail(subject, message, send_to, sent_from , reply_to);
+      await sendEmail(subject, message, send_to, sent_from, reply_to);
       res
         .status(200)
         .json({ success: true, message: "Email sent successfully" });
